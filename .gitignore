@@ -1,0 +1,3 @@
+node_modules/
+# Beispieldaten aus scripts/sample.js, nie committen
+/beispiel/

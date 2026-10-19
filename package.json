@@ -1,0 +1,10 @@
+{
+	"name": "blub-status",
+	"private": true,
+	"type": "module",
+	"description": "Statusseite von blub, gemessen von außen alle zehn Minuten",
+	"engines": {
+		"node": ">=24"
+	},
+	"scripts": {}
+}
