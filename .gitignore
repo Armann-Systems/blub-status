@@ -3,3 +3,5 @@ node_modules/
 /beispiel/
 # Messdaten liegen im Branch messungen, nie auf main
 /data/
+# Gebaute Seite, landet nur im Pages-Artefakt
+/_site/

@@ -7,6 +7,7 @@
 		"node": ">=24"
 	},
 	"scripts": {
-		"measure": "node src/measure.js"
+		"measure": "node src/measure.js",
+		"build": "node src/build.js"
 	}
 }
