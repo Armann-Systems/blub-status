@@ -16,7 +16,7 @@
 
 	/* Striche brauchen 3:1 gegen das Papier, Text in Zustandsfarbe 4,5:1 (WCAG AA) */
 	--bar-ok: #3f7d49;
-	--bar-degraded: #c48a16;
+	--bar-degraded: #b5800f;
 	--bar-outage: #b13a2e;
 	--bar-none: #cbc3b3;
 	--text-ok: #285530;
@@ -33,6 +33,32 @@
 	--gutter: clamp(16px, 4.4vw, 64px);
 	--maxw: 1280px;
 	color-scheme: light;
+}
+
+/* Dunkel wie die Nachtseiten von blub.ai (Notdienst): Tinte statt Papier, Licht in Markergelb */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #141d31;
+		--surface: #172238;
+		--paper: #1f2c47;
+		--line: #34425f;
+		--line-strong: #4a5a7c;
+		--text: #ece7dc;
+		--muted: #a9b2c4;
+		--ink: #9db4ec;
+		--ink-deep: #c3d1f5;
+		--ink-print: #8ea3d6;
+		--shadow: rgb(0 0 0 / 0.75);
+		--bar-ok: #5fae6b;
+		--bar-degraded: #e2ac3c;
+		--bar-outage: #ec6f5f;
+		--bar-none: #4a587a;
+		--text-ok: #7fcc8a;
+		--text-degraded: #f0c25a;
+		--text-outage: #ff8f80;
+		--text-none: #a9b2c4;
+		color-scheme: dark;
+	}
 }
 
 *,
