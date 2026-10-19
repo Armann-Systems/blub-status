@@ -1,3 +1,5 @@
 node_modules/
 # Beispieldaten aus scripts/sample.js, nie committen
 /beispiel/
+# Messdaten liegen im Branch messungen, nie auf main
+/data/
