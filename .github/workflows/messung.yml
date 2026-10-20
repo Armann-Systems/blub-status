@@ -1,12 +1,12 @@
 # Misst alle zehn Minuten von außen, legt die Messung im Branch messungen ab und veröffentlicht die
 # Seite als Pages-Artefakt. main bleibt frei von Messdaten, nur der Bot schreibt nach messungen.
-# Geplante Läufe startet GitHub oft ein paar Minuten später; die Seite sagt selbst, wenn ihre
-# letzte Messung älter als 45 Minuten ist.
+# Geplante Läufe startet GitHub oft ein paar Minuten später, zur vollen Stunde am meisten, deshalb
+# versetzt ab Minute 3; die Seite sagt selbst, wenn ihre letzte Messung älter als 45 Minuten ist.
 name: Messung
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '3-59/10 * * * *'
   workflow_dispatch:
 
 permissions:
