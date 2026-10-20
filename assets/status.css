@@ -500,6 +500,21 @@ a {
 	transition: transform 120ms var(--ease);
 	transform-origin: bottom;
 }
+.day {
+	position: relative;
+}
+/* Tag mit eingetragenem Vorfall: Tintenpunkt über dem Strich */
+.day.has-incident::before {
+	content: '';
+	position: absolute;
+	top: -9px;
+	left: 50%;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: var(--ink);
+	transform: translateX(-50%);
+}
 .day:hover,
 .day.is-active {
 	transform: scaleY(1.12);
@@ -584,12 +599,140 @@ a {
 	font-size: 13px;
 	color: var(--muted);
 }
+.tip-incident {
+	margin-top: 6px !important;
+	padding-top: 6px;
+	border-top: 1px dashed var(--line-strong);
+	font-weight: 500;
+}
 .axis {
 	display: flex;
 	justify-content: space-between;
 	margin: 8px 0 0;
 	font-family: var(--f-mono);
 	font-size: 12px;
+	color: var(--muted);
+}
+
+/* Vorfälle ------------------------------------------------------------------------------------ */
+
+.open-incidents {
+	margin-top: 22px;
+	padding: 12px 16px;
+	max-width: 52ch;
+	background: var(--paper);
+	border-left: 3px solid var(--ink);
+}
+.open-incidents .label {
+	display: block;
+	margin: 0 0 4px;
+}
+.open-incidents ul {
+	margin: 0;
+	padding-left: 18px;
+}
+
+.incidents {
+	display: grid;
+	grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+	gap: 20px clamp(32px, 6vw, 96px);
+	padding-block: clamp(56px, 8vw, 120px) 0;
+}
+.incidents h2 {
+	margin: 0;
+	font-size: clamp(34px, 4vw, 56px);
+}
+.incident-list {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 28px;
+}
+.incident {
+	position: relative;
+	padding: 20px clamp(18px, 2.4vw, 28px) 18px;
+	background: var(--paper);
+	border: 1px solid var(--line);
+	border-radius: 2px;
+	box-shadow: 0 20px 40px -30px var(--shadow);
+	scroll-margin-top: 16px;
+}
+.incident:nth-child(odd) {
+	transform: rotate(-0.35deg);
+}
+.incident:nth-child(even) {
+	transform: rotate(0.3deg);
+}
+.incident .when {
+	margin: 0 0 6px;
+	padding-right: 120px;
+	font-family: var(--f-mono);
+	font-size: 13px;
+	color: var(--ink-print);
+}
+.incident h3 {
+	margin: 0;
+	padding-right: 110px;
+	overflow-wrap: break-word;
+	font-size: clamp(24px, 2.4vw, 30px);
+	line-height: 1.12;
+}
+.incident .meta {
+	margin: 10px 0 0;
+}
+.severity {
+	font-family: var(--f-mono);
+	font-size: 13.5px;
+	font-weight: 600;
+}
+.severity.s-degraded {
+	color: var(--text-degraded);
+}
+.severity.s-outage {
+	color: var(--text-outage);
+}
+.affected {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 10px 0 0;
+	padding: 0;
+	list-style: none;
+}
+.affected li {
+	padding: 1px 9px 2px;
+	border: 1px solid var(--line-strong);
+	border-radius: 999px;
+	font-size: 13.5px;
+}
+.incident .text {
+	margin-top: 12px;
+	padding-top: 12px;
+	border-top: 1px dashed color-mix(in oklab, var(--ink-print) 42%, transparent);
+}
+.incident .text p,
+.incident .text ul {
+	margin: 0 0 10px;
+	max-width: 62ch;
+}
+.incident .text h4 {
+	margin: 14px 0 4px;
+	font-family: var(--f-mono);
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--ink-print);
+}
+.incident .stamp {
+	position: absolute;
+	top: 18px;
+	right: 16px;
+	margin: 0;
+	font-size: 14px;
+}
+.incident .stamp.s-ok {
+	color: var(--text-ok);
+}
+.empty {
+	margin: 0;
 	color: var(--muted);
 }
 
@@ -639,6 +782,7 @@ a {
 
 @media (max-width: 900px) {
 	.hero,
+	.incidents,
 	.method {
 		grid-template-columns: minmax(0, 1fr);
 	}
@@ -664,6 +808,14 @@ a {
 	}
 	.note dt {
 		flex-basis: 74px;
+	}
+	.incident .when,
+	.incident h3 {
+		padding-right: 0;
+	}
+	.incident .stamp {
+		position: static;
+		margin-top: 6px;
 	}
 }
 

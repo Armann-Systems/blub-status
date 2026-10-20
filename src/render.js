@@ -1,6 +1,8 @@
 // HTML der Statusseite. Setzt nur zusammen, bewertet ist alles schon in build.js.
 import { readFileSync } from 'node:fs';
 import { worst } from './grade.js';
+import { esc } from './markdown.js';
+import { incidentSection, openIncidents } from './render-incidents.js';
 import {
 	OVERALL_STAMP,
 	STATE_LABEL,
@@ -8,7 +10,7 @@ import {
 	dayText,
 	headline,
 	headlineDetails,
-	measuredAtText,
+	dateTimeText,
 	percentText,
 	secondsText,
 	timeText
@@ -17,9 +19,6 @@ import {
 const REPO_URL = 'https://github.com/Armann-Systems/blub-status';
 // Eingebettet statt als Datei: eine Anfrage weniger, und die Seite lädt kein Skript von irgendwo.
 const CLIENT = readFileSync(new URL('./client.js', import.meta.url), 'utf8');
-
-const ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
-export const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ESCAPES[c]);
 
 function noteRows(latest) {
 	const api = latest?.api ?? {};
@@ -50,7 +49,7 @@ function hero(status) {
 	const { latest, components } = status;
 	const overall = latest ? worst(components.map((c) => c.state)) : 'none';
 	const lead = latest
-		? `Stand der letzten Messung: ${measuredAtText(latest.at)}.`
+		? `Stand der letzten Messung: ${dateTimeText(latest.at)}.`
 		: 'Die erste Messung folgt in den nächsten zehn Minuten.';
 	const details = headlineDetails(components)
 		.map((d) => `<p class="detail">${esc(d)}</p>`)
@@ -64,6 +63,7 @@ function hero(status) {
 		<h1 class="display">${esc(headline(components, Boolean(latest)))}</h1>
 		<p class="lead" data-measured-at="${latest?.at ?? ''}">${esc(lead)}</p>
 		${details}
+		${openIncidents(status.incidents)}
 	</div>
 	<article class="note" aria-label="Notiz zur letzten Messung">
 		<p class="note-org">Armann Systems · Regensburg</p>
@@ -80,11 +80,15 @@ function hero(status) {
 }
 
 function dayBar(day, isToday) {
-	const parts =
-		day.state === 'none'
-			? `<span data-part="state">keine Messung</span>.`
-			: `<span data-part="state">${STATE_LABEL[day.state]}</span>. <span data-part="counts">${countsText(day)}</span>.`;
-	return `<li><button type="button" class="day s-${day.state}" tabindex="${isToday ? 0 : -1}"><span class="sr"><span data-part="date">${dayText(day.key)}</span>: ${parts}</span></button></li>`;
+	const measured = day.ok + day.degraded + day.outage > 0;
+	const state = measured || day.incidents.length ? STATE_LABEL[day.state] : 'keine Messung';
+	const parts = [
+		`<span data-part="date">${dayText(day.key)}</span>: <span data-part="state">${state}</span>.`,
+		measured ? ` <span data-part="counts">${countsText(day)}</span>.` : '',
+		...day.incidents.map((i) => ` <span data-part="incident">Vorfall: ${esc(i.title)}</span>.`)
+	].join('');
+	const marked = day.incidents.length ? ' has-incident' : '';
+	return `<li><button type="button" class="day s-${day.state}${marked}" tabindex="${isToday ? 0 : -1}"><span class="sr">${parts}</span></button></li>`;
 }
 
 function component(c) {
@@ -149,6 +153,7 @@ ${hero(status)}
 	</div>
 	<ol class="components">${status.components.map(component).join('')}</ol>
 </section>
+${incidentSection(status.incidents)}
 ${METHOD}
 </main>
 <footer class="foot wrap">

@@ -10,7 +10,7 @@ export const STATE_LABEL = {
 
 const format = (options) => new Intl.DateTimeFormat('de-DE', { timeZone: TIME_ZONE, ...options });
 const stampTime = format({ hour: '2-digit', minute: '2-digit' });
-const measuredAt = format({
+const dateTime = format({
 	weekday: 'long',
 	day: 'numeric',
 	month: 'long',
@@ -21,7 +21,7 @@ const measuredAt = format({
 const dayLong = format({ weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
 export const timeText = (iso) => stampTime.format(new Date(iso));
-export const measuredAtText = (iso) => `${measuredAt.format(new Date(iso))} Uhr`;
+export const dateTimeText = (iso) => `${dateTime.format(new Date(iso))} Uhr`;
 /** Tag aus YYYY-MM-DD; Mittag UTC liegt in Berlin immer auf demselben Kalendertag. */
 export const dayText = (key) => dayLong.format(new Date(`${key}T12:00:00Z`));
 
