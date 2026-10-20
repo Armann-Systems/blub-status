@@ -4,6 +4,16 @@
 
 Eine GitHub Action misst alle zehn Minuten von außen, hängt die Messung im Branch `messungen` an und veröffentlicht daraus `index.html` und `status.json` über GitHub Pages. `main` enthält nur Code, Schwellen und Vorfälle, keine Messdaten. Es gibt keinen Server und keine Abhängigkeiten außer Node 24.
 
+## So funktioniert es
+
+1. `src/measure.js` ruft `https://blub.ai/` und `/api/health` ab (Statuscode, Antwortzeit) und holt von `/api/status` die zusammengefassten Kennzahlen der Plattform.
+2. Die Messung landet als eine Zeile in `data/JJJJ-MM.jsonl` im Branch `messungen`. Den legt der erste Lauf ohne gemeinsame Historie an; nur der Bot schreibt dorthin.
+3. `src/build.js` bewertet jede Messung je Komponente (`config/thresholds.js`), fasst die letzten 90 Tage zu Tagesstrichen zusammen und schreibt die Seite samt `assets/` und `CNAME` nach `_site/`. Die Action lädt den Ordner als Pages-Artefakt hoch.
+
+Bewertung in Kürze: Antwortet blub.ai nicht, ist das Intervall überall Ausfall. Ein Tagesstrich zeigt den schlechtesten Zustand des Tages, ohne Messung bleibt er grau. Die Prozentzahl ist der Anteil der Messungen ohne Ausfall.
+
+Einrichtung auf GitHub: Settings › Pages › Source „GitHub Actions“, Custom domain `status.blub.ai`, HTTPS erzwingen. Der erste Lauf (Actions › Messung › Run workflow) legt den Branch `messungen` an.
+
 ## Vorfall eintragen
 
 Eine Markdown-Datei in `incidents/`, Name frei, z. B. `2026-10-20-webhooks.md`:

@@ -1,0 +1,66 @@
+# Misst alle zehn Minuten von außen, legt die Messung im Branch messungen ab und veröffentlicht die
+# Seite als Pages-Artefakt. main bleibt frei von Messdaten, nur der Bot schreibt nach messungen.
+# Geplante Läufe startet GitHub oft ein paar Minuten später; die Seite sagt selbst, wenn ihre
+# letzte Messung älter als 45 Minuten ist.
+name: Messung
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write # nur für den Push nach messungen
+  pages: write
+  id-token: write
+
+# Nie zwei Läufe gleichzeitig: Beide hängen an dieselbe Monatsdatei an.
+concurrency:
+  group: messung
+  cancel-in-progress: false
+
+jobs:
+  messen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      # Eigene Historie nur für Daten. Beim ersten Lauf gibt es den Branch noch nicht, dann leer anlegen.
+      - name: Messdaten holen
+        run: |
+          if git ls-remote --exit-code --heads origin messungen; then
+            git fetch --depth=1 origin messungen
+            git worktree add --detach messungen FETCH_HEAD
+          else
+            git worktree add --orphan -b messungen messungen
+          fi
+
+      - name: Messen
+        run: node src/measure.js --data messungen/data
+
+      # Erst sichern, dann bauen: Ein fehlerhafter Vorfall hält die Seite an, nicht die Messung.
+      - name: Messung sichern
+        working-directory: messungen
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data
+          git commit -m "chore(data): Messung $(date -u +'%Y-%m-%d %H:%M') UTC"
+          git push origin HEAD:messungen
+
+      - name: Seite bauen
+        run: node src/build.js --data messungen/data --out _site
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - id: deploy
+        uses: actions/deploy-pages@v4
