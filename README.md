@@ -14,6 +14,15 @@ Bewertung in Kürze: Antwortet blub.ai nicht, ist das Intervall überall Ausfall
 
 Einrichtung auf GitHub: Settings › Pages › Source „GitHub Actions“, Custom domain `status.blub.ai`, HTTPS erzwingen. Der erste Lauf (Actions › Messung › Run workflow) legt den Branch `messungen` an.
 
+Lokal, mit Beispieldaten (90 Tage, ein paar Störungen) in `beispiel/`, das nie ins Repo gehört:
+
+```sh
+npm test
+npm run sample
+node src/build.js --data beispiel/data --incidents beispiel/incidents --out beispiel
+BLUB_BASE_URL=http://localhost:5191 node src/measure.js --data beispiel/data
+```
+
 ## Vorfall eintragen
 
 Eine Markdown-Datei in `incidents/`, Name frei, z. B. `2026-10-20-webhooks.md`:

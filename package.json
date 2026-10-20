@@ -9,6 +9,7 @@
 	"scripts": {
 		"measure": "node src/measure.js",
 		"build": "node src/build.js",
-		"test": "node --test test/*.test.js"
+		"test": "node --test test/*.test.js",
+		"sample": "node scripts/sample.js"
 	}
 }
