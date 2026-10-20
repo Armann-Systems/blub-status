@@ -51,7 +51,7 @@ export function countsText({ ok, degraded, outage }) {
 export function headline(components, hasMeasurement) {
 	const named = (state) => components.filter((c) => c.state === state).map((c) => c.name);
 	if (!hasMeasurement) return 'Noch keine Messung.';
-	if (named('outage').length === components.length) return 'Störung in allen Bereichen.';
+	if (named('outage').length === components.length) return 'Ausfall in allen Bereichen.';
 	if (named('outage').length) return `Ausfall: ${nameList(named('outage'))}.`;
 	if (named('degraded').length) return `Eingeschränkt: ${nameList(named('degraded'))}.`;
 	if (named('ok').length === components.length) return 'Alles läuft normal.';
@@ -75,6 +75,6 @@ export function headlineDetails(components) {
 export const OVERALL_STAMP = {
 	ok: 'betriebsbereit',
 	degraded: 'eingeschränkt',
-	outage: 'Störung',
+	outage: 'Ausfall',
 	none: 'keine Daten'
 };
