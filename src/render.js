@@ -45,6 +45,15 @@ function noteRows(latest) {
 	];
 }
 
+/** blub wie auf der Website: zufrieden, wenn alles läuft, sonst mit offenen Augen und geradem Mund. */
+function figure(overall) {
+	const face =
+		overall === 'ok'
+			? '<path class="line arc" d="M37 46q8-11 16 0m14 0q8-11 16 0"/><path class="line" d="M52 63q8 7 16 0"/>'
+			: '<ellipse class="white" cx="45" cy="42" rx="9" ry="11"/><ellipse class="white" cx="75" cy="42" rx="9" ry="11"/><circle class="pupil" cx="45" cy="45" r="4.8"/><circle class="pupil" cx="75" cy="45" r="4.8"/><path class="line" d="M53 65h14"/>';
+	return `<svg class="figure" viewBox="0 0 120 112" aria-hidden="true"><path class="shape" d="M30 68 16 108 58 80Z"/><rect class="shape" x="6" y="6" width="108" height="78" rx="36"/>${face}</svg>`;
+}
+
 function hero(status) {
 	const { latest, components } = status;
 	const overall = latest ? worst(components.map((c) => c.state)) : 'none';
@@ -66,6 +75,7 @@ function hero(status) {
 		${openIncidents(status.incidents)}
 	</div>
 	<article class="note" aria-label="Notiz zur letzten Messung">
+		${figure(overall)}
 		<p class="note-org">Armann Systems · Regensburg</p>
 		<p class="note-title">Betriebsnotiz</p>
 		<dl>${rows}</dl>
@@ -135,6 +145,8 @@ export function renderPage(status) {
 <title>Status · blub</title>
 <meta name="description" content="Betriebsstatus von blub: Anrufannahme, Sprachverarbeitung, Portal, Nacharbeit, Benachrichtigungen und Webhooks, alle zehn Minuten von außen gemessen.">
 <meta name="color-scheme" content="light dark">
+<link rel="icon" href="assets/blub.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/fraunces-soft.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/status.css">
 </head>
 <body>

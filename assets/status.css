@@ -1,5 +1,33 @@
 /* Statusseite im Stil der blub-Website („Telefonnotiz“): Papier, Tinte, Stempel. Farben wie in
    apps/web/src/lib/site/landing/theme.css der Plattform; Zustandsfarben eigens für die Striche. */
+/* Schriften wie auf blub.ai, selbst gehostet (OFL, Lizenztexte in assets/fonts/). Nichts wird von
+   fremden Servern geladen. */
+@font-face {
+	font-family: 'Blub Text';
+	src: url('fonts/instrument-sans.woff2') format('woff2');
+	font-weight: 400 700;
+	font-stretch: 75% 100%;
+	font-display: optional;
+}
+@font-face {
+	font-family: 'Blub Mono';
+	src: url('fonts/jetbrains-mono.woff2') format('woff2');
+	font-weight: 100 800;
+	font-display: optional;
+}
+@font-face {
+	font-family: 'Blub Display';
+	src: url('fonts/fraunces-soft.woff2') format('woff2');
+	font-weight: 350 620;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Blub Hand';
+	src: url('fonts/playwrite-de-va.woff2') format('woff2');
+	font-weight: 300;
+	font-display: swap;
+}
+
 :root {
 	--bg: #ece7dc;
 	--surface: #f6f2ea;
@@ -292,6 +320,34 @@ a {
 	font-weight: 560;
 	font-size: 15px;
 	line-height: 1;
+}
+
+/* blub schaut über den Rand der Notiz */
+.figure {
+	position: absolute;
+	top: -54px;
+	right: -18px;
+	width: 96px;
+	height: 90px;
+	transform: rotate(8deg);
+}
+.figure .shape {
+	fill: var(--ink);
+}
+.figure .white {
+	fill: var(--paper);
+}
+.figure .pupil {
+	fill: var(--text);
+}
+.figure .line {
+	fill: none;
+	stroke: var(--paper);
+	stroke-width: 3.5;
+	stroke-linecap: round;
+}
+.figure .arc {
+	stroke-width: 4.5;
 }
 
 /* Stempel wie auf blub.ai: doppelter Rand, leicht gedreht, ausgefranst */
@@ -808,6 +864,11 @@ a {
 	}
 	.note dt {
 		flex-basis: 74px;
+	}
+	.figure {
+		right: 0;
+		width: 76px;
+		height: 71px;
 	}
 	.incident .when,
 	.incident h3 {
