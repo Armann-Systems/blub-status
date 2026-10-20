@@ -528,6 +528,62 @@ a {
 		color-mix(in oklab, var(--bar-none) 45%, transparent) 2px 4px
 	);
 }
+/* Notiz zum Tag: über dem Streifen, Pfeil zeigt auf den Strich */
+.tip {
+	position: absolute;
+	bottom: calc(100% + 12px);
+	z-index: 5;
+	width: min(290px, 100%);
+	padding: 11px 14px 12px;
+	background: var(--paper);
+	border: 1px solid var(--line-strong);
+	border-radius: 2px;
+	box-shadow: 0 18px 36px -18px var(--shadow);
+	font-size: 14px;
+	line-height: 1.4;
+	pointer-events: none;
+}
+.tip::after {
+	content: '';
+	position: absolute;
+	top: 100%;
+	left: var(--arrow, 50%);
+	width: 11px;
+	height: 11px;
+	background: var(--paper);
+	border-right: 1px solid var(--line-strong);
+	border-bottom: 1px solid var(--line-strong);
+	transform: translate(-50%, -5px) rotate(45deg);
+}
+.tip p {
+	margin: 0;
+}
+.tip-date {
+	font-stretch: 78%;
+	font-weight: 600;
+	font-size: 13px;
+	color: var(--ink-print);
+}
+.tip-state {
+	font-family: var(--f-mono);
+	font-weight: 600;
+}
+.tip.s-ok .tip-state {
+	color: var(--text-ok);
+}
+.tip.s-degraded .tip-state {
+	color: var(--text-degraded);
+}
+.tip.s-outage .tip-state {
+	color: var(--text-outage);
+}
+.tip.s-none .tip-state {
+	color: var(--text-none);
+}
+.tip-counts {
+	font-size: 13px;
+	color: var(--muted);
+}
 .axis {
 	display: flex;
 	justify-content: space-between;

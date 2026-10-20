@@ -1,4 +1,5 @@
 // HTML der Statusseite. Setzt nur zusammen, bewertet ist alles schon in build.js.
+import { readFileSync } from 'node:fs';
 import { worst } from './grade.js';
 import {
 	OVERALL_STAMP,
@@ -14,6 +15,8 @@ import {
 } from './text.js';
 
 const REPO_URL = 'https://github.com/Armann-Systems/blub-status';
+// Eingebettet statt als Datei: eine Anfrage weniger, und die Seite lädt kein Skript von irgendwo.
+const CLIENT = readFileSync(new URL('./client.js', import.meta.url), 'utf8');
 
 const ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
 export const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ESCAPES[c]);
@@ -156,6 +159,8 @@ ${METHOD}
 		<li><a href="${REPO_URL}">Quelltext und Messdaten</a></li>
 	</ul>
 </footer>
+<script>
+${CLIENT}</script>
 </body>
 </html>
 `;
