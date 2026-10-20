@@ -880,6 +880,24 @@ a {
 	}
 }
 
+/* Große Monitore ohne Skalierung (3840 px bei 100 %): Spalte und Schrift wachsen mit, sonst steht
+   die Seite als schmaler Streifen in der Mitte. */
+@media (min-width: 2200px) {
+	:root {
+		--maxw: 1720px;
+	}
+	body {
+		font-size: 20px;
+	}
+	.day {
+		height: 56px;
+	}
+	.note {
+		max-width: 620px;
+		justify-self: end;
+	}
+}
+
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,
