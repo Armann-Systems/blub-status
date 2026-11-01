@@ -1,0 +1,1 @@
+{"at":"2026-11-01T00:08:22.532Z","site":{"status":200,"ms":1309},"health":{"status":200,"ms":1141},"api":{"status":200,"ms":1142,"db":true,"workerAgeS":18,"jobs":{"followup":0,"recording":0,"mail":0,"webhook":0},"linesRatio":1,"answerP50Ms":null,"answerP95Ms":null,"callsOkRatio":null,"speechErrorRatio1h":null,"speechErrorRatio24h":null,"mailErrorRatio":null,"webhookRatio":null}}
