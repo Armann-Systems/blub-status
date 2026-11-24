@@ -15,6 +15,24 @@ test('blub.ai antwortet nicht: alle Komponenten Ausfall, auch wenn /api/status g
 	assert.deepEqual(allStates(evaluate(m)), ['outage']);
 });
 
+test('Verbindungsfehler auf einer Adresse, Antwort auf den anderen: Messfehler, kein Ausfall', () => {
+	const m = healthy();
+	m.site = { error: 'ETIMEDOUT', ms: 600 };
+	m.api = { error: 'ETIMEDOUT', ms: 450 };
+	const states = evaluate(m);
+	assert.equal(states.portal, 'ok');
+	assert.deepEqual(allStates({ ...states, portal: 'none' }), ['none']);
+});
+
+test('Startseite und Health ohne Verbindung, /api/status antwortet: Portal ohne Daten', () => {
+	const m = healthy();
+	m.site = { error: 'ETIMEDOUT', ms: 800 };
+	m.health = { error: 'ETIMEDOUT', ms: 700 };
+	const states = evaluate(m);
+	assert.equal(states.portal, 'none');
+	assert.equal(states.anrufannahme, 'ok');
+});
+
 test('/api/health mit 5xx: alle Komponenten Ausfall', () => {
 	const m = healthy();
 	m.health = { status: 502, ms: 30 };

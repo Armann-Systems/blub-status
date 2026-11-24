@@ -8,9 +8,12 @@ const maxKnown = (...values) => (known(values).length ? Math.max(...known(values
 /** Was der Worker abarbeitet, steht still, wenn er sich nicht mehr meldet. */
 const workerState = (api) => grade(api.workerAgeS, 'workerAgeS');
 
-function portal(m) {
-	const refused = m.site.status >= 400 || m.health.status >= 400;
-	return worst([refused ? 'degraded' : 'ok', grade(Math.max(m.site.ms, m.health.ms), 'portalMs')]);
+/** Bewertet nur die Adressen, die gemessen wurden; site oder health ist sonst null. */
+function portal({ site, health }) {
+	const probes = [site, health].filter(Boolean);
+	if (!probes.length) return 'none';
+	const refused = probes.some((p) => p.status >= 400);
+	return worst([refused ? 'degraded' : 'ok', grade(Math.max(...probes.map((p) => p.ms)), 'portalMs')]);
 }
 
 export const COMPONENTS = [
