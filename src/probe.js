@@ -6,7 +6,18 @@ export const TIMEOUT_MS = 10_000;
 
 const USER_AGENT = 'blub-status (+https://status.blub.ai)';
 
+// Nach einem Verbindungsfehler einmal neu ansetzen: Der Runner verliert gelegentlich den Aufbau,
+// ein Kunde lädt dann einfach neu. Nach einer Zeitüberschreitung nicht, länger wartet niemand.
+const RETRY_AFTER_MS = 1000;
+
 export async function probe(url, fetchImpl = fetch) {
+	const first = await attempt(url, fetchImpl);
+	if (!first.error || first.error === 'timeout') return first;
+	await new Promise((resolve) => setTimeout(resolve, RETRY_AFTER_MS));
+	return attempt(url, fetchImpl);
+}
+
+async function attempt(url, fetchImpl) {
 	const started = performance.now();
 	const elapsed = () => Math.round(performance.now() - started);
 	try {

@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import { evaluate } from '../src/evaluate.js';
 import { measure } from '../src/measure.js';
 import { platformFrom } from '../src/platform.js';
+import { probe } from '../src/probe.js';
 
 const refused = async () => {
 	throw new TypeError('fetch failed', { cause: { code: 'ECONNREFUSED' } });
@@ -13,6 +14,17 @@ test('blub.ai nicht erreichbar: Messwert ist der Fehler, nicht null, und alles i
 	assert.deepEqual(m.site, { error: 'ECONNREFUSED', ms: m.site.ms });
 	assert.equal(m.api.error, 'ECONNREFUSED');
 	assert.deepEqual([...new Set(Object.values(evaluate(m)))], ['outage']);
+});
+
+test('nach einem Verbindungsfehler zählt der zweite Versuch', async () => {
+	let calls = 0;
+	const flaky = async () => {
+		calls += 1;
+		if (calls === 1) throw new TypeError('fetch failed', { cause: { code: 'ETIMEDOUT' } });
+		return new Response('ok');
+	};
+	assert.equal((await probe('https://blub.invalid/', flaky)).status, 200);
+	assert.equal(calls, 2);
 });
 
 test('Zeitüberschreitung wird als timeout gemessen', async () => {
